@@ -32,17 +32,16 @@ export const getAppointment: RequestHandler = async (req, res, next) => {
 }
 
 interface CreateAppointmentBody {
-    appointment_id: string;
     appointment_date: string;
     appointment_time: string;
     appointment_with: string;
     appointment_status: string;
 }
 export const createAppointment: RequestHandler<unknown, unknown, CreateAppointmentBody, unknown> = async (req, res, next) => {
-    const { appointment_id, appointment_date, appointment_time, appointment_with, appointment_status } = req.body;
+    const { appointment_date, appointment_time, appointment_with, appointment_status } = req.body;
         
     try {
-        if (!appointment_id || !appointment_date || !appointment_time || !appointment_with || !appointment_status) {
+        if (!appointment_date || !appointment_time || !appointment_with || !appointment_status) {
             throw createHttpError(400, "All fields are required");
         }
 
@@ -57,7 +56,7 @@ export const createAppointment: RequestHandler<unknown, unknown, CreateAppointme
             req.body.appointment_with = consultant._id.toString();
         }
 
-        const newAppointment = new AppointmentModel({ appointment_id, appointment_date, appointment_time, appointment_with:req.body.appointment_with, appointment_status });
+        const newAppointment = new AppointmentModel({ appointment_date, appointment_time, appointment_with:req.body.appointment_with, appointment_status });
         const savedAppointment = await newAppointment.save();
         res.status(201).json(savedAppointment);
     } catch (error) {
@@ -69,7 +68,6 @@ interface UpdateAppointmentParams{
     appointmentId: string;
 }
 interface UpdateAppointmentBody {
-    appointment_id: string;
     appointment_date: string;
     appointment_time: string;
     appointment_with: string;
@@ -78,7 +76,7 @@ interface UpdateAppointmentBody {
 
 export const updateAppointment: RequestHandler<UpdateAppointmentParams, unknown, UpdateAppointmentBody, unknown> = async (req, res, next) => {
     const appointmentId = req.params.appointmentId;
-    const { appointment_id, appointment_date, appointment_time, appointment_with, appointment_status } = req.body;
+    const { appointment_date, appointment_time, appointment_with, appointment_status } = req.body;
     
     try {
         if (!mongoose.Types.ObjectId.isValid(appointmentId)) {
@@ -86,7 +84,7 @@ export const updateAppointment: RequestHandler<UpdateAppointmentParams, unknown,
         }
         const updatedAppointment = await AppointmentModel.findByIdAndUpdate(
             appointmentId,
-            { appointment_id, appointment_date, appointment_time, appointment_with, appointment_status },
+            { appointment_date, appointment_time, appointment_with, appointment_status },
             { new: true }
         ).exec();
         if (!updatedAppointment) {

@@ -1,10 +1,7 @@
 import {InferSchemaType, Schema, model} from 'mongoose';
 
 const studentSchema = new Schema({
-    student_id: {
-        type: String,
-        required: true,
-    },
+
     student_name: {
         type: String,
         required: true,

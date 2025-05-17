@@ -1,10 +1,7 @@
 import {InferSchemaType, Schema, model} from 'mongoose';
 
 const serviceSchema = new Schema({
-    service_id: {
-        type: String,
-        required: true,
-    },
+
     service_name: {
         type: String,
         required: true,

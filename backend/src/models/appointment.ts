@@ -1,10 +1,7 @@
 import mongoose, { InferSchemaType, Schema, model } from 'mongoose';
 
 const appointmentSchema = new Schema({
-    appointment_id: {
-        type: String,
-        required: true,
-    },
+
     appointment_date: {
         type: Date,
         required: true,

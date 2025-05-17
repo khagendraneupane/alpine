@@ -1,10 +1,7 @@
 import mongoose, {InferSchemaType, Schema, model} from 'mongoose';
 
 const consultantSchema = new Schema({
-    consultant_id: {
-        type: String,
-        required: true,
-    },
+
     consultant_name: {
         type: String,
         required: true,

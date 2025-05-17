@@ -1,10 +1,6 @@
 import {InferSchemaType, Schema, model} from 'mongoose';
 
 const adminSchema = new Schema({
-    admin_id: {
-        type: String,
-        required: true,
-    },
     admin_name: {
         type: String,
         required: true,

@@ -120,6 +120,7 @@ export const updateConsultant: RequestHandler<UpdateConsultantParams, unknown, U
         next(error);
     }
 };
+
 export const deleteConsultant: RequestHandler = async (req, res, next) => {
     const consultantId = req.params.consultantId;
     try {
@@ -128,8 +129,7 @@ export const deleteConsultant: RequestHandler = async (req, res, next) => {
         }
         const deletedConsultant = await ConsultantModel.findByIdAndDelete(consultantId).exec();
         if (!deletedConsultant) {
-            res.status(404).json({ message: "Consultant not found" });
-            return;
+            throw createHttpError(404, "Consultant not found");
         }
         res.status(200).json({ message: "Consultant deleted successfully" });
     } catch (error) {
