@@ -1,4 +1,4 @@
-import mongoose, {InferSchemaType, Schema, model} from 'mongoose';
+import {InferSchemaType, Schema, model} from 'mongoose';
 
 const consultantSchema = new Schema({
 
@@ -7,7 +7,7 @@ const consultantSchema = new Schema({
         required: true,
     },
     consultant_specialization: {
-        type: mongoose.Schema.Types.ObjectId, ref: 'Service',
+        type: String,
         required: true,
     },
     

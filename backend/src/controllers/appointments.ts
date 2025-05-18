@@ -7,7 +7,9 @@ import mongoose from "mongoose";
 
 export const getAppointments: RequestHandler = async (req, res, next) => {
     try {
-    const appointments = await AppointmentModel.find().exec();
+    const appointments = await AppointmentModel.find()
+    .populate("appointment_with", "consultant_name")
+    .exec();
     res.status(200).json(appointments );
     } catch (error) {
         next(error);
@@ -21,7 +23,9 @@ export const getAppointment: RequestHandler = async (req, res, next) => {
         if (!mongoose.Types.ObjectId.isValid(appointmentId)) {
             throw createHttpError(400, "Invalid appointment ID");
         }
-        const appointment = await AppointmentModel.findById(appointmentId).exec();
+        const appointment = await AppointmentModel.findById(appointmentId)
+        .populate("appointment_with", "consultant_name")
+        .exec();
         if (!appointment) {
             throw createHttpError(404, "Appointment not found");
         }

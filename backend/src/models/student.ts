@@ -9,6 +9,7 @@ const studentSchema = new Schema({
     student_email: {
         type: String,
         required: true,
+        unique: true,
     },
     student_phone: {
         type: String,
@@ -18,7 +19,7 @@ const studentSchema = new Schema({
         type: String,
         required: true,
     },
-    admin_password: {
+    student_password: {
         type: String,
         required: true,
     }

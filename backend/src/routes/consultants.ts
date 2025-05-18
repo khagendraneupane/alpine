@@ -7,5 +7,6 @@ router.post("/", ConsultantsController.createConsultant);
 router.get("/:consultantId", ConsultantsController.getConsultant);
 router.patch("/:consultantId", ConsultantsController.updateConsultant);
 router.delete("/:consultantId", ConsultantsController.deleteConsultant);
+router.get("/search", ConsultantsController.searchConsultants);
 
 export default router;

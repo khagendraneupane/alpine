@@ -1,17 +1,22 @@
 import styles from "../styles/Appointment.module.css";
-import { Button, Card } from "react-bootstrap";
+import { Card, Button } from "react-bootstrap";
 import { Appointment as AppointmentModel } from "../models/appointment";
 import { formatDate }from "../utils/formatDate";
 import { shortDate } from "../utils/shortDate";
-import { MdDelete } from "react-icons/md";
+
 import styleUtils from "../styles/utils.module.css";
+
+
+
 
 interface AppointmentProps {
     appointment: AppointmentModel,
+    onAppointmentClicked: (appointment: AppointmentModel) => void,
     onCancelAppointmentCLicked: (appointment: AppointmentModel) => void,
     className?: string,
 }
-const Appointment = ({appointment, onCancelAppointmentCLicked, className}: AppointmentProps) => {
+
+const Appointment = ({appointment,onAppointmentClicked, onCancelAppointmentCLicked, className}: AppointmentProps) => {
     const {
     appointment_date,
     appointment_time,
@@ -34,27 +39,24 @@ const Appointment = ({appointment, onCancelAppointmentCLicked, className}: Appoi
     <Card className={`${styles.appointmentCard} ${className}`}>
         <Card.Body className={styles.cardbody}>
             <Card.Title className={styleUtils.flexCenter}>
-                
-                <Button 
-                size="sm"
-                variant="danger"
-                className="text-muted ms-auto"
-                onClick={(e) => {
-                onCancelAppointmentCLicked(appointment);
-                    e.stopPropagation();
-                }}
-                >
-                    Cancel Appointment
-                </Button>
-                
-                
-                
-             
+            {/* <MdDelete
+                        className="text-muted ms-auto"
+                        onClick={(e) => {
+                            onCancelAppointmentCLicked(appointment);
+                            e.stopPropagation();
+                        }}
+                    />  */}
+        <Button className="text-muted ms-auto btn-sm"
+                        onClick={(e) => {
+                            onCancelAppointmentCLicked(appointment);
+                            e.stopPropagation();
+                        }}> Cancel Appointment
+        </Button>
             </Card.Title>
             <Card.Text className={styles.cardText}>
                 <strong>Date:</strong> {shortDate(appointment_date)}<br />
                 <strong>Time:</strong> {appointment_time}<br />
-                <strong>With:</strong> {appointment_with}<br />
+                <strong>With:</strong> {appointment_with?.consultant_name || "N/A"}<br />
                 <strong>Status:</strong> {appointment_status}<br />
             </Card.Text>
             

@@ -19,6 +19,8 @@ app.use("/api/students", studentRoutes);
 app.use("/api/services", serviceRoutes);
 app.use("/api/consultants", consultantRoutes);
 app.use("/api/appointments", appointmentRoutes);
+app.use("/api/students", studentRoutes);
+
 
 app.use((req, res, next) => {
     next(createHttpError(404,"Endpoint not Found"));
