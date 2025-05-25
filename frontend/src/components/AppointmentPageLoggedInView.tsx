@@ -1,22 +1,20 @@
 import { useEffect, useState } from 'react';
 import { Button, Col, Row, Spinner } from "react-bootstrap";
-import { FaPlus } from "react-icons/fa";
-import styles from "../styles/AppointmentsPage.module.css";
 import { Appointment as AppointmentModel } from '../models/appointment';
 import * as AppointmentsApi from "../network/appointment_api";
+import styles from "../styles/AppointmentsPage.module.css";
 import styleUtils from "../styles/utils.module.css";
 import AddEditAppointmentDialog from "./AddEditAppointmentDialog";
 import Appointment from './Appointment';
 
-
-const AppointmentsPageLoggedInView = () => {
-
+    const AppointmentsPageLoggedInView = () => {
     const [appointments, setAppointments] = useState<AppointmentModel[]>([]);
     const [appointmentsLoading, setAppointmentsLoading] = useState(true);
     const [showAppointmentsLoadingError, setShowAppointmentsLoadingError] = useState(false);
-
     const [showAddAppointmentDialog, setShowAddAppointmentDialog] = useState(false);
     const [appointmentToEdit, setAppointmentToEdit] = useState<AppointmentModel | null>(null);
+
+
 
     useEffect(() => {
         async function loadAppointments() {

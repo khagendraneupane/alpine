@@ -72,6 +72,7 @@ export async function fetchAppointments(): Promise<Appointment[]> {
 export interface AppointmentInput {
     appointment_date: string;
     appointment_time: string;
+    appointment_type: string;
     appointment_with: string;
     appointment_status: string;
 }

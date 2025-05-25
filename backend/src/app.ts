@@ -4,9 +4,11 @@ import appointmentRoutes from "./routes/appointments";
 import adminRoutes from "./routes/admins";
 import studentRoutes from "./routes/students";
 import consultantRoutes from "./routes/consultants";
+import consultationRoutes from "./routes/consultation";
 import serviceRoutes from "./routes/services";
 import morgan from "morgan";
 import createHttpError, {isHttpError} from "http-errors";
+
 
 const app = express();
 
@@ -20,6 +22,7 @@ app.use("/api/services", serviceRoutes);
 app.use("/api/consultants", consultantRoutes);
 app.use("/api/appointments", appointmentRoutes);
 app.use("/api/students", studentRoutes);
+app.use("/api/consultation", consultationRoutes);
 
 
 app.use((req, res, next) => {

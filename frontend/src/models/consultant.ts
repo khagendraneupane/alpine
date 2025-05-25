@@ -1,9 +1,10 @@
-export interface Student {
+export interface Consultant {
     _id: number;
     name: string;
+    specialization: string;
     email: string;
-    phone: string;
-    nationality: string;
+    phone: number;
+    image: string;
     createdAt: string;
     updatedAt: string;
     }

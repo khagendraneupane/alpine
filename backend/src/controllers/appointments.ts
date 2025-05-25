@@ -3,6 +3,7 @@ import AppointmentModel from "../models/appointment";
 import createHttpError from "http-errors";
 import ConsultantModel from "../models/consultant";
 import mongoose from "mongoose";
+import ConsultationModel from "../models/consultation"; // Import ConsultationModel
 
 
 export const getAppointments: RequestHandler = async (req, res, next) => {
@@ -36,31 +37,43 @@ export const getAppointment: RequestHandler = async (req, res, next) => {
 }
 
 interface CreateAppointmentBody {
-    appointment_date: string;
-    appointment_time: string;
-    appointment_with: string;
-    appointment_status: string;
+    date: string;
+    time: string;
+    consultation_type: string;
+    consultant_name: string;
+    status: "pending" | "confirmed" | "cancelled";
 }
 export const createAppointment: RequestHandler<unknown, unknown, CreateAppointmentBody, unknown> = async (req, res, next) => {
-    const { appointment_date, appointment_time, appointment_with, appointment_status } = req.body;
+    const { date, time, consultation_type, consultant_name, status } = req.body;
         
     try {
-        if (!appointment_date || !appointment_time || !appointment_with || !appointment_status) {
+        if (!date || !time || !consultation_type || !consultant_name || !status) {
             throw createHttpError(400, "All fields are required");
         }
 
          // Validate appointment_with as an ObjectId
-         if (!mongoose.Types.ObjectId.isValid(appointment_with)) {
+         if (!mongoose.Types.ObjectId.isValid(consultant_name)) {
             // If it's not a valid ObjectId, try to find the consultant by name
-            const consultant = await ConsultantModel.findOne({ consultant_name: appointment_with }).exec();
+            const consultant = await ConsultantModel.findOne({ name: consultant_name }).exec();
             if (!consultant) {
                 throw createHttpError(404, "Consultant not found");
             }
             // Replace appointment_with with the consultant's _id
-            req.body.appointment_with = consultant._id.toString();
+            req.body.consultant_name = consultant._id.toString();
         }
 
-        const newAppointment = new AppointmentModel({ appointment_date, appointment_time, appointment_with:req.body.appointment_with, appointment_status });
+          // Validate appointment_with as an ObjectId
+          if (!mongoose.Types.ObjectId.isValid(consultation_type)) {
+            // If it's not a valid ObjectId, try to find the consultant by name
+            const consultation = await ConsultationModel.findOne({ name: consultation_type }).exec();
+            if (!consultation) {
+                throw createHttpError(404, "Consultation not found");
+            }
+            // Replace appointment_with with the consultant's _id
+            req.body.consultation_type = consultation._id.toString();
+        }
+
+        const newAppointment = new AppointmentModel({ date, time, appointment_type:req.body.consultation_type ,consultant_name:req.body.consultant_name, status });
         const savedAppointment = await newAppointment.save();
         res.status(201).json(savedAppointment);
     } catch (error) {
@@ -72,15 +85,16 @@ interface UpdateAppointmentParams{
     appointmentId: string;
 }
 interface UpdateAppointmentBody {
-    appointment_date: string;
-    appointment_time: string;
-    appointment_with: string;
+    date: string;
+    time: string;
+    consultation_type: string;
+    consultant_name: string;
     appointment_status: string;
 }
 
 export const updateAppointment: RequestHandler<UpdateAppointmentParams, unknown, UpdateAppointmentBody, unknown> = async (req, res, next) => {
     const appointmentId = req.params.appointmentId;
-    const { appointment_date, appointment_time, appointment_with, appointment_status } = req.body;
+    const { date, time, consultation_type, consultant_name, appointment_status} = req.body;
     
     try {
         if (!mongoose.Types.ObjectId.isValid(appointmentId)) {
@@ -88,7 +102,7 @@ export const updateAppointment: RequestHandler<UpdateAppointmentParams, unknown,
         }
         const updatedAppointment = await AppointmentModel.findByIdAndUpdate(
             appointmentId,
-            { appointment_date, appointment_time, appointment_with, appointment_status },
+            { date, time, consultation_type, consultant_name, appointment_status },
             { new: true }
         ).exec();
         if (!updatedAppointment) {

@@ -1,31 +1,29 @@
-import React, { useEffect, useState } from 'react';
-import {Appointment as AppointmentModel} from './models/appointment';
-import Appointment from './components/Appointment';
-import { Container, Row, Col, Button } from 'react-bootstrap';
-import styles from "./styles/AppointmentsPage.module.css";
-import stylesUtils from "./styles/utils.module.css";
-import * as AppointmentsApi from './network/appointment_api';
-
-import NotFoundPage from './pages/NotFoundPage';
-import PrivacyPage from './pages/PrivacyPage';
-import { BrowserRouter } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { Container } from 'react-bootstrap';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import AddEditConsultantDialog from './components/AddEditConsultantDialog';
+import AddServiceForm from './components/AddServiceForm';
+import ConsultantList from './components/ConsultantList';
 import LoginModal from './components/LoginModal';
 import NavBar from './components/NavBar';
 import SignUpModal from './components/SignUpModal';
 import { Student } from './models/student';
-import * as AppointmentApi from "./network/appointment_api";
+import * as AppointmentsApi from './network/appointment_api';
 import AppointmentPage from './pages/AppointmentsPage';
+import HomePage from './pages/HomePage';
+import PrivacyPage from './pages/PrivacyPage';
+import ServicesPage from './pages/ServicesPage';
+import styles from "./styles/AppointmentsPage.module.css";
+import AddConsultantForm from './components/AddConsultantForm';
 
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import SignupPage from "./pages/StudentSignupPage";
-import LoginPage from "./pages/StudentLoginPage";
-import StudentDashboard from "./pages/StudentDashboardPage";
+
 
 function App() {
   const [loggedInUser, setLoggedInUser] = useState<Student | null>(null);
 
 	const [showSignUpModal, setShowSignUpModal] = useState(false);
 	const [showLoginModal, setShowLoginModal] = useState(false);
+	const [showAddEditConsultantDialog, setShowAddEditConsultantDialog] = useState(false);
 
   // const [appointments, setAppointments] = React.useState<AppointmentModel[]>([]);
 
@@ -59,13 +57,14 @@ function App() {
 							path='/'
 							element={<AppointmentPage loggedInUser={loggedInUser} />}
 						/>
+						{/* <Route
+						path='/'
+						element={<HomePage />} /> */}
+							
+
 						<Route
 							path='/privacy'
 							element={<PrivacyPage />}
-						/>
-						<Route
-							path='/*'
-							element={<NotFoundPage />}
 						/>
 					</Routes>
 				</Container>
@@ -87,7 +86,26 @@ function App() {
 						}}
 					/>
 				}
+				{ showAddEditConsultantDialog &&
+					<AddEditConsultantDialog
+						onDismiss={() => setShowAddEditConsultantDialog(true)}
+						onConsultantSaved={(consultant) => {
+							setShowAddEditConsultantDialog(false);
+							console.log('Consultant saved:', consultant);
+						}}
+					/>
+
+				}
 			</div>
+			<Routes>
+
+				<Route path="/services" element={<ServicesPage />} />
+
+				<Route path="/services/add" element={<AddServiceForm />} />
+				<Route path="/consultants" element={<ConsultantList />} />
+				<Route path="/consultants/add" element={<AddConsultantForm />} />
+				<Route path="/landing" element={<HomePage />} />
+			</Routes>
 		</BrowserRouter>
 
   );

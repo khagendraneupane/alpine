@@ -24,8 +24,11 @@ const NavBar = ({ loggedInUser, onSignUpClicked, onLoginClicked, onLogoutSuccess
                         <Nav.Link as={Link} to="/#">
                             Home
                         </Nav.Link>
-                        <Nav.Link as={Link} to="/#">
+                        <Nav.Link as={Link} to="/appointment">
                             Appointments
+                        </Nav.Link>
+                        <Nav.Link as={Link} to="consultants">
+                            Consultants
                         </Nav.Link>
                         <Nav.Link as={Link} to="/#">
                             Notifications

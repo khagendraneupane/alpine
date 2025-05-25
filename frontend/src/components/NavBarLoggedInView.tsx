@@ -6,7 +6,6 @@ interface NavBarLoggedInViewProps {
     user: Student,
     onLogoutSuccessful: () => void,
 }
-
 const NavBarLoggedInView = ({ user, onLogoutSuccessful }: NavBarLoggedInViewProps) => {
 
     async function logout() {
@@ -18,15 +17,13 @@ const NavBarLoggedInView = ({ user, onLogoutSuccessful }: NavBarLoggedInViewProp
             alert(error);
         }
     }
-
     return (
         <>
             <Navbar.Text className="me-2">
-                Signed in as: {user.student_email}
+                Signed in as: {user.email}
             </Navbar.Text>
             <Button onClick={logout}>Log out</Button>
         </>
     );
 }
-
 export default NavBarLoggedInView;

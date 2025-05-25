@@ -1,15 +1,19 @@
-import { Button, Form, Modal } from "react-bootstrap";
-import { useEffect, useState } from "react";
 import axios from "axios";
+import { useEffect, useState } from "react";
+import { Button, Form, Modal } from "react-bootstrap";
 import { useForm } from "react-hook-form";
 import { Appointment } from "../models/appointment";
-import { AppointmentInput } from "../network/appointment_api";
 import * as AppointmentsApi from "../network/appointment_api";
-import TextInputField from "./form/TextInputField";
+import { AppointmentInput } from "../network/appointment_api";
 
 interface Consultant {
     _id: string;
-    consultant_name: string;
+    name: string;
+}
+
+interface Consultation {
+    consultation_id: string;
+    consultation_type: string;
 }
 
 interface AddEditAppointmentDialogProps {
@@ -25,10 +29,13 @@ const AddEditAppointmentDialog = ({ appointmentToEdit, onDismiss, onAppointmentS
         defaultValues: {
             appointment_date: appointmentToEdit?.appointment_date || "",
             appointment_time: appointmentToEdit?.appointment_time || "",
+            appointment_type: typeof appointmentToEdit?.appointment_type === "object"
+            ? appointmentToEdit.appointment_type.consultation_type
+            : appointmentToEdit?.appointment_type || "",
             appointment_with: typeof appointmentToEdit?.appointment_with === "object" 
                 ? appointmentToEdit.appointment_with.consultant_name 
                 : appointmentToEdit?.appointment_with || "",
-            appointment_status: appointmentToEdit?.appointment_status || "",
+            appointment_status: appointmentToEdit?.appointment_status || "confirmed",
         }
     });
 
@@ -37,11 +44,6 @@ const AddEditAppointmentDialog = ({ appointmentToEdit, onDismiss, onAppointmentS
 
     useEffect(() => {
         const fetchConsultants = async () => {
-            // if (searchTerm.trim() === "") {
-            //     setConsultants([]);
-            //     return;
-            // }
-
             try {
                 const response = await axios.get("/api/consultants");
                 setConsultants(response.data);
@@ -49,9 +51,24 @@ const AddEditAppointmentDialog = ({ appointmentToEdit, onDismiss, onAppointmentS
                 console.error("Error fetching consultants:", error);
             }
         };
-
         fetchConsultants();
     }, []);
+
+
+    const [consultations, setConsultations] = useState<Consultation[]>([]);
+    const [selectedConsultation, setSelectedConsultation] = useState<string>("");
+    useEffect(() => {
+        const fetchConsultations = async () => {
+            try {
+                const response = await axios.get("/api/consultation");
+                setConsultations(response.data);
+            } catch (error) {
+                console.error("Error fetching consultations:", error);
+            }
+        };
+        fetchConsultations();
+    }, []);
+    
     async function onSubmit(input: AppointmentInput) {
         try {
             let appointmentResponse: Appointment;
@@ -99,6 +116,28 @@ const AddEditAppointmentDialog = ({ appointmentToEdit, onDismiss, onAppointmentS
                         {errors.appointment_time?.message}
                     </Form.Control.Feedback>
                 </Form.Group>
+                <Form.Group>
+        <Form.Label>Appointment Type</Form.Label>
+        <Form.Select
+            isInvalid={!!errors.appointment_type}
+            {...register("appointment_type", { required: "Please select appoinment type" })}
+            value={selectedConsultation}
+            onChange={(e) => {
+                setSelectedConsultation(e.target.value);
+                setValue("appointment_type", e.target.value); // Update the form value
+            }}
+        >
+            <option value="">Select consultation Type</option>
+            {consultations.map((consultation) => (
+                <option key={consultation.consultation_id} value={consultation.consultation_id}>
+                    {consultation.consultation_type}
+                </option>
+            ))}
+        </Form.Select>
+        <Form.Control.Feedback type="invalid">
+            {errors.appointment_with?.message}
+        </Form.Control.Feedback>
+    </Form.Group>
     
                 <Form.Group>
         <Form.Label>Appointment With</Form.Label>
@@ -114,7 +153,7 @@ const AddEditAppointmentDialog = ({ appointmentToEdit, onDismiss, onAppointmentS
             <option value="">Select a Consultant</option>
             {consultants.map((consultant) => (
                 <option key={consultant._id} value={consultant._id}>
-                    {consultant.consultant_name}
+                    {consultant.name}
                 </option>
             ))}
         </Form.Select>
@@ -122,7 +161,7 @@ const AddEditAppointmentDialog = ({ appointmentToEdit, onDismiss, onAppointmentS
             {errors.appointment_with?.message}
         </Form.Control.Feedback>
     </Form.Group>
-                <Form.Group>
+                 <Form.Group>
                     <Form.Label>Appointment Status</Form.Label>
                     <Form.Control
                         type="text"
@@ -133,7 +172,7 @@ const AddEditAppointmentDialog = ({ appointmentToEdit, onDismiss, onAppointmentS
                     <Form.Control.Feedback type="invalid">
                         {errors.appointment_status?.message}
                     </Form.Control.Feedback>
-                </Form.Group>
+                </Form.Group> 
             </Form>
         </Modal.Body>
         <Modal.Footer>

@@ -2,24 +2,29 @@ import {InferSchemaType, Schema, model} from 'mongoose';
 
 const consultantSchema = new Schema({
 
-    consultant_name: {
+    name: {
         type: String,
         required: true,
     },
-    consultant_specialization: {
+    specialization: {
         type: String,
         required: true,
     },
     
-    consultant_email: {
+    email: {
         type: String,
         required: true,
     },
-    consultant_phone: {
+    phone: {
         type: String,
         required: true,
     },
-    consultant_password: {
+    image:{
+        filename: { type: String, required: true }, // Name of the uploaded file
+        path: { type: String, required: true }, // Path to the file on the server
+        mimetype: { type: String, required: true }, // MIME type of the file (e.g., image/jpeg)
+    },
+    password: {
         type: String,
         required: true,
     }

@@ -1,6 +1,6 @@
 const AppointmentsPageLoggedOutView = () => {
     return (
-        <p>Please login to manage your Appointments</p>
+        <p>Please login to Book Appointments</p>
     );
 }
 

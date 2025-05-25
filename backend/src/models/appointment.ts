@@ -2,19 +2,23 @@ import mongoose, { InferSchemaType, Schema, model } from 'mongoose';
 
 const appointmentSchema = new Schema({
 
-    appointment_date: {
+    date: {
         type: Date,
         required: true,
     },
-    appointment_time: {
+    time: {
         type: String,
         required: true,
     },
-    appointment_with: {
+    consultation_type: {
+        type: mongoose.Schema.Types.ObjectId, ref: 'Consultation',
+        required: true,
+    },
+    consultant_name: {
         type: mongoose.Schema.Types.ObjectId, ref: 'Consultant',
         required: true,
     },
-    appointment_status: {
+    status: {
         type: String,
         required: true,
     }
